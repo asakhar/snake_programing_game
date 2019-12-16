@@ -26,14 +26,18 @@ def errorAlert(*text):
 
 
 class Snake(Object):
-    def __init__(self, image, pn, script, pos=[30, 10], size=None, stdir=STAY, deaths=0):
+    def __init__(self, image, pn, script, pos=[30, 10], size=None, stdir=STAY, 
+                 deaths=0):
         super().__init__(type='snake')
-        self.img = pygame.image.load(f'images/{image}.png') if not isinstance(image, pygame.Surface) else image
+        self.img = pygame.image.load(f'images/{image}.png') if not isinstance(
+                image, 
+                pygame.Surface
+                ) else image
         self.size = size if size else self.img.get_size()
         self.clock = Clock()
         self.clock.tick()
         self.headpos = pos.copy()
-        self.speed = 10#80
+        self.speed = 180#80
         self.delayer = 0
         self.health = None
         self.pn = pn
@@ -50,7 +54,8 @@ class Snake(Object):
     
     def respawn(self, control):
         control -= self
-        control += Snake.spawn(control, self.img, self.pn, self.script, self.stdir, self.deaths+1)
+        control += Snake.spawn(control, self.img, self.pn, self.script, 
+                               self.stdir, self.deaths+1)
 #        drop = [Food(pos=i.pos) for i in self.tail if choice([True]*2+[False]*1)]
         
 #        for i in drop:
@@ -64,8 +69,8 @@ class Snake(Object):
             y += direction[1]*10
             obj = control.getbyattr(attr='pos', value=[x, y])
             if obj or (y < 0) or (x < 0) or (x > control.size[0]) or (y > control.size[1]):
-#                if obj and obj.type == 'snake' and hasattr(obj, 'parentid') and obj.parentid == self.pn:
-#                    return direction, 'self', abs(self.headpos[1]-y) + abs(self.headpos[0]-x)
+                if obj and obj.type == 'snake' and hasattr(obj, 'parentid') and obj.parentid == self.pn:
+                    return direction, 'self', abs(self.headpos[1]-y) + abs(self.headpos[0]-x)
                 return direction, obj.type if obj else None, abs(self.headpos[1]-y) + abs(self.headpos[0]-x)
     
     def __call__(self, control):
@@ -87,13 +92,16 @@ class Snake(Object):
                     cycles=self.cycles)
             res = self.script.run(kwargs)
             del kwargs
-            if (res not in DIRECTIONS)and(not isinstance(self.script, control.eventhandler.Behavior)):
+            if (res not in DIRECTIONS)and(not isinstance(self.script, 
+               control.eventhandler.Behavior)):
                 raise Exception('Wrong direction!')
         except Exception as e:
             if e.args == ('Wrong direction!', ):
-                errorAlert(e, 'Snake script returns invalid direction', 'Direction must be in range: (0, 1), (1, 0), (0, -1), (-1, 0)')
+                errorAlert(e, 'Snake script returns invalid direction', 
+                           'Direction must be in range: (0, 1), (1, 0), (0, -1), (-1, 0)')
             else:
-                errorAlert(*traceback.format_exception(type(e), e, e.__traceback__))
+                errorAlert(*traceback.format_exception(type(e), e, 
+                                                       e.__traceback__))
                 res = self.direction
             control.eventhandler.toggle_pause(control, True)
             self.respawn(control)
@@ -119,9 +127,11 @@ class Snake(Object):
                 self.respawn(control)
                 return
             if (self.headpos in control.getproperty('snake', attr='pos')):
-                if control.gamerules.encounter_tail == 'set_block':
-                    tail = control.getbyattr(type='snake', attr='pos', value=self.headpos)
-                    snake = control.getbyattr(type='snake', attr='pn', value=tail.parentid)
+                if control.gamerules.encounter_tail == 'set_block_cut':
+                    tail = control.getbyattr(type='snake', attr='pos', 
+                                             value=self.headpos)
+                    snake = control.getbyattr(type='snake', attr='pn', 
+                                              value=tail.parentid)
                     if snake.pn == self.pn:
                         self.respawn(control)
                         return
@@ -132,19 +142,27 @@ class Snake(Object):
                         for i in range(index):
                                 control -= snake.tail.pop(0)
                         for i in spawn_poss:
-                            control += Barrier(pos=i.copy(), countdown=5000)
+                            control += Barrier(pos=i.copy(), countdown=10000)
                     except Exception:
                         pass
                 elif control.gamerules.encounter_tail == 'set_food':
-                    for i in self.tail:
-                        control += Food(pos=i.pos)
+                    tmp = [x.pos.copy() for x in self.tail]
                     self.respawn(control)
+                    for i in tmp:
+                        control += Food(pos=i)
                     return
                 elif control.gamerules.encounter_tail == 'nothing':
                     self.respawn(control)
                     return
+                elif control.gamerules.encounter_tail == 'set_block_self':
+                    tmp = [x.pos.copy() for x in self.tail]
+                    self.respawn(control)
+                    for i in tmp:
+                        control += Barrier(pos=i)
+                    return
             if self.headpos in control.getproperty(attr='pos', type='food'):
-                control -= control.getbyattr(type='food', value=self.headpos, attr='pos')
+                control -= control.getbyattr(type='food', value=self.headpos, 
+                                             attr='pos')
                 self.health += 1
             tmp = SnakeTail(self.img, self.pn, pos=self.headpos, size=self.size)
             control += tmp
@@ -158,10 +176,12 @@ class Snake(Object):
             
     def spawn(control, image, pn, script, stdir=STAY, deaths=0):
         while 1:
-            pos=[randint(2, control.size[0]//10-2)*10, randint(2, control.size[1]//10-2)*10]
+            pos=[randint(2, control.size[0]//10-2)*10, randint(2, 
+                 control.size[1]//10-2)*10]
             if not (pos in control.getproperty(attr='pos')):
                 break
-        return Snake(image, pn, pos=pos, script=script, stdir=stdir, deaths=deaths)
+        return Snake(image, pn, pos=pos, script=script, stdir=stdir, 
+                     deaths=deaths)
     
     def destruct(self, control):
         for i in self.tail:
