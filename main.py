@@ -25,18 +25,18 @@ if __name__=='__main__':
     
     opening level and placing blocks on the scene
     '''
-    level, size = openLevel('level1')
+    level, size = openLevel('level1') #iterate the level and size of the scene
     game = Control(size=(size[0]*10, size[1]*10))
     level_iter = iter(load(level, size))
-    while 1:
+    while 1: #exception checking
         try:
-            el = next(level_iter)
+            el = next(level_iter) # returns the next iterator value
         except:
-            el = None
+            el = None # skips element
         if not el:
-            break
+            break #if not find the element stops
         if not el[0]:
-            game += Barrier('block', pos=[el[1]*10, el[2]*10])
+            game += Barrier('block', pos=[el[1]*10, el[2]*10])  #establish barriers and position
     '''keyboard-controlling snake(s)'''
 #    game += Snake.spawn(game, 'red', 'p1', EventHandler.Behavior(WASD))
     game += Snake.spawn(game, 'green', 'p2', EventHandler.Behavior(ARROWS))
@@ -53,7 +53,7 @@ if __name__=='__main__':
     '''
     try:
         game()
-    except Exception as e:
+    except Exception as e: # create crashreport and print all exceptions
         f = open('crashreport.txt', 'w')
         f.writelines(traceback.format_exception(type(e), e, e.__traceback__))
         f.close()
