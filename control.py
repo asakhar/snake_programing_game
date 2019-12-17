@@ -26,7 +26,7 @@ class Control:
         
         Constructor
                 bgcolor : pygame.Color - changes the background color
-                size : Dict[2] - defines the size of the window
+                size : Tuple[2] - defines the size of the window
             
             Initializes game scene.
     '''
@@ -162,7 +162,7 @@ class Control:
         '''
         while 1:
             try:
-                f = open(scriptapath, 'r')
+                f = open(scriptpath, 'r')
                 lines = ''.join(f.readlines())+'\nControl.script = Behavior()'
                 f.close()
                 exec(lines)
