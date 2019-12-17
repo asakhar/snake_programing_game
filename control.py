@@ -36,9 +36,21 @@ class Control:
     
     def __init__(self, 
                  bgcolor=pygame.Color('White'), 
-                 size=(400, 400),  
+                 size=(400, 400)
                  ):
-        '''Constructor'''
+        """
+        Parameters
+        ----------
+        bgcolor : pygame.Color, optional
+            Background color of scene. The default is pygame.Color('White').
+        size : (int, int), optional
+            Scene size in pixels. The default is (400, 400).
+
+        Returns
+        -------
+        None.
+
+        """
         # jsondump(gamerules.args, open('gameconfig', 'w'))
         self.gamerules = KeyWordArguments(**jsonload(open('gameconfig', 'r')))
         os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (0.0, 30.0)
@@ -141,25 +153,53 @@ class Control:
         return self
     
     def getproperty(self, type=None, attr='pos'):
-        '''
-        type : str|None - type of objects for searching the property
-        attr : str - property name
+        """
         
-        returns generator object that yields objects' properties
-        '''
+
+        Parameters
+        ----------
+        type : str|None, optional
+            DESCRIPTION. The default is None.
+            type of objects for searching the property
+        attr : str, optional
+            DESCRIPTION. The default is 'pos'.
+            property name
+
+        Yields
+        ------
+        Any
+            DESCRIPTION.
+            Selected property of each object at the scene
+        """
+
         for i in self.objects:
             if (i.type == type)or(type == None):
                 if hasattr(i, attr):
                     yield getattr(i, attr)
     
     def getbyattr(self, type=None, attr=None, value=None):
-        '''
-        type : str|None - type of an object to be returned
-        attr : str - name of the property to compare
-        value : Any - property value
+        """
         
-        returns first object from scene which properties' value is equal to "value" arg
-        '''
+
+        Parameters
+        ----------
+        type : str|None, optional
+            DESCRIPTION. The default is None.
+            type of an object to be returned
+        attr : str
+            DESCRIPTION
+            name of the property to compare
+        value : Any
+            DESCRIPTION.
+            property value
+
+        Returns
+        -------
+        object : GameObject
+            DESCRIPTION.
+            first object from scene which properties' value is equal to "value" arg
+        """
+        
         for i in self.objects:
             if ((i.type == type)or(type == None)) \
               and hasattr(i, attr) and \
@@ -168,25 +208,51 @@ class Control:
         return None
     
     def getobjects(self, type=None):
-        '''
+        """
         
-        type : str|None - type of objects to be returned
+        !DEPRICATED!
+        Parameters
+        ----------
+        type : str|None, optional
+            DESCRIPTION. The default is None.
+            type of objects to be yielded
+            
+        Yields
+        ------
+        object : GameObject
+            DESCRIPTION.
+            objects of given type
+            
+        """
         
-        returns generator object that yields every object of given type
-        '''
         for i in self.objects:
             if (i.type == type)or(type == None):
                 yield i
                 
-    def addAutoSnake(self, scriptpath : str, color, name : str = ''):
-        '''
-        scriptpath : str - path to the snake script file(e.g. snackescript.py)
-        name : str - the name of snake to be spawned
-        
+    def addAutoSnake(self, scriptpath : str, color : str, name : str = ''):
+        """
+        DESCRIPTION.
         Loads custom script and spawns new snake
+        If file can't be found or another exception is thrown shows an error messasage/
         
-        If file can't be found or another exception is thrown shows an error messasage
-        '''
+        Parameters
+        ----------
+        scriptpath : str
+            DESCRIPTION.
+            path to the snake script file(e.g. snackescript.py)
+        color : str
+            DESCRIPTION.
+            color file name
+        name : str, optional
+            DESCRIPTION. The default is ''.
+            the name of snake to be spawned
+            
+        Returns
+        -------
+        None.
+
+        """
+        
         while 1:
             try:
                 f = open(scriptpath, 'r')
@@ -212,9 +278,23 @@ class Control:
                 break
         
 def errorAlert(*text):
-    '''
-    Shows an error message in new window
-    '''
+    """
+    DESCRIPTION.
+    Shows an error message in new window.
+
+    Parameters
+    ----------
+    *text : str
+        DESCRIPTION.
+        error message text
+
+    Returns
+    -------
+    event : str ('Ok' or 'Calcel')|None
+        DESCRIPTION.
+        Users selection.        
+    """
+    
     layout = [
             [sg.Text(x, key='label', font='Hack 12')] for x in text] \
             + [[sg.Ok(), sg.Cancel()]
