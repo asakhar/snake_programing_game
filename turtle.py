@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Nov 23 12:11:20 2019
+Created on Fri Nov 22 16:29:09 2019
 
 @author: egor56ru
 """
+
 import pygame
 '''
 библиотека для создания игр
@@ -16,40 +17,66 @@ from gameobject import Object
 from pygame.time import Clock
 '''
  модуль, который используется для взаимодействия с игровым времени и его управлением
-'''
+ функция Clock отвечает за создание объекта, который поможет отслеживать время жизни еды
 
-class Food(Object):
-    '''описание еды
+'''
+from random import choice
+'''
+модуль для генерации случайных чисел, букв, случайного выбора элементов последовательности.
+функция choice отвечает за выбор случайного элемента последовательности
+'''
+class Turtle(Object):
+    
+    
+    '''описание терепашек
+        img:    изображение объекта
         size:   размер, берется из дэфолтного файла, если не не задан другой файл 
         pos:    позиция
         drawn:  отображен ли уже объект
         timer:  время жизни
+        coundown: обратный отсчет
         clock:  функция из pygame.time, позволяющая отслеживать время жизни
-        img:    изображение объекта
+        choices: последовательность из который будет выбираться рандомный элемент
+        new_t: новая черепашка
+        savepos: сохранение позиции
+        coundown: отсчет времени
 
     '''
-    def __init__(self, image='food', pos=[0, 0], size=None):
+    choices = [0, 10, -10]
+    
+    def __init__(self, image='turtle', pos=[0, 0], size=None, countdown=1000):
         '''
         задаем начальные значения
         '''
-        super().__init__(type='food')
+        super().__init__(type='barrier')
         self.img = pygame.image.load(f'images/{image}.png')
         self.size = size if size else self.img.get_size()
         self.pos = pos.copy()
         self.drawn = False
-        self.timer = -10000
+        self.coundown = -countdown
         self.clock = Clock()
         
     def __call__(self, control):
         '''
-        отрисовка еды, с учетом времени её жизни
+        отрисовка черепашек, с учетом времени их жизни
         '''
         if not self.drawn:
             control.window.blit(self.img, self.pos)
             self.drawn = True
-        if self.timer>=0:
+        
+        self.coundown += self.clock.tick()
+        if self.coundown >= 0:
+            savepos = self.pos.copy()
             control -= self
-        self.timer += self.clock.tick()
+            while 1:
+                new_t = Turtle(pos=[
+                        savepos[0]+choice(self.choices),
+                        savepos[1]+choice(self.choices)
+                        ])
+                if not (new_t.pos in control.getproperty(attr='pos')):
+                    break
+            control += new_t
+            
     
     def destruct(self, control):
         '''

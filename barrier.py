@@ -11,8 +11,8 @@ import pygame
 '''
 from gameobject import Object
 '''
-gameobject представляет собой визуальный объект,
-знающий о том, как себя рендерить, сохранять свои границы и перемещаться
+берем класс Object из файла gameobject представляющий собой визуальный объект
+
 '''
 
 class Barrier(Object):
