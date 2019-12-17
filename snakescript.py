@@ -13,12 +13,12 @@ from random import choice
 class Behavior:
     dir_order = [UP, LEFT, DOWN, RIGHT]
     
-    nearest_food : list = None
-    prev_turn : tuple = None
+    
+    nearest_food : list = None 
     
     def run(self, kwargs):
-        data = kwargs['data']
-        cur = kwargs['direction']
+        data = kwargs.data
+        cur = kwargs.direction
         prev = cur.copy()
         if self.nearest_food:
             if self.nearest_food[2] <= 0:
