@@ -20,6 +20,11 @@ from pygame.time import Clock
 from control import Control, errorAlert
 
 if __name__=='__main__':
+    '''
+    Income point
+    
+    opening level and placing blocks on the scene
+    '''
     level, size = openLevel('level1')
     game = Control(size=(size[0]*10, size[1]*10))
     level_iter = iter(load(level, size))
@@ -32,14 +37,20 @@ if __name__=='__main__':
             break
         if not el[0]:
             game += Barrier('block', pos=[el[1]*10, el[2]*10])
+    '''keyboard-controlling snake(s)'''
 #    game += Snake.spawn(game, 'red', 'p1', EventHandler.Behavior(WASD))
-#    game += Snake.spawn(game, 'green', 'p2', EventHandler.Behavior(ARROWS))
-#    os.system('start idle -e snakescript.py')
+    game += Snake.spawn(game, 'green', 'p2', EventHandler.Behavior(ARROWS))
+    '''open template.py in idle'''
+#    os.system('start idle -e template.py')
 #    os.system('start idle -e snakescript1.py')
     
+    '''depricated'''
 #    game.addAutoSnake('snakescript.py', 'blue', '0')
 #    game.addAutoSnake('snakescript1.py', 'green', '1')
     error1 = False
+    '''
+    run game and error handling
+    '''
     try:
         game()
     except Exception as e:
