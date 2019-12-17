@@ -9,26 +9,33 @@ from gameobject import Object
 from pygame.time import Clock
 
 class MegaFood(Object):
+    '''Implements the object class which is responsible for MegaFood'''
     
     def __init__(self, image='megafood', pos=[0, 0], size=None):
         super().__init__(type='food')
-        self.img = pygame.image.load(f'images/{image}.png')
-        self.size = size if size else self.img.get_size()
-        self.pos = pos.copy()
-        self.drawn = False
-        self.timer = -2000
-        self.clock = Clock()
-        self.mega = True
+        '''characteristic of object'''
+        self.img = pygame.image.load(f'images/{image}.png') #graphical representation of the object
+        self.size = size if size else self.img.get_size() #size of object
+        self.pos = pos.copy() #position of the object
+        self.drawn = False #is the object displayed
+        self.timer = -2000 #lifetime of the object
+        self.clock = Clock() #tracking the lifetime of the object
+        self.mega = True #is the object "mega" 
         
     def __call__(self, control):
-        if not self.drawn:
+        '''If there is no object in the field, the function creates it.
+        If there is an object in the field, the function counts the time of its existence'''
+        #if the object is missing create it
+        if not self.drawn: 
             control.window.blit(self.img, self.pos)
             self.drawn = True
+        # if an object is present consider its lifetime
         if self.timer>=0:
             control -= self
         self.timer += self.clock.tick()
     
     def destruct(self, control):
+        '''When the lifetime of an object is out the function destroys it.'''
         if self.drawn:
             pygame.draw.rect(control.window, control.bgcolor,
                              pygame.Rect(
