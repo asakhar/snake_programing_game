@@ -18,6 +18,9 @@ from food import Food
 from levelloader import load, openLevel
 from pygame.time import Clock
 from guinterface import GUI
+from turtle import Turtle
+from slowdown import Slowdown
+from megafood import MegaFood
 from json import load as jsonload, dump as jsondump
 
 class Control:
@@ -50,8 +53,9 @@ class Control:
         self.bgcolor = bgcolor
         self.eventhandler = EventHandler()
         self.run = True
-        self.foodspawn = self.gamerules.foodspawnrange
-        self.nextfood = -randint(*self.foodspawn)
+        self.nextfood = -randint(*self.gamerules.foodspawnrange)
+        self.nextmegafood = -randint(*self.gamerules.megaspawnrange)
+        self.nextslowdown = -randint(*self.gamerules.slowspawnrange)
         self.size = size
         self.pause = False
         self.deaths = {}
@@ -76,7 +80,7 @@ class Control:
             self.eventhandler(self)
             if self.run and not self.pause:
                 if self.nextfood>=0:
-                    self.nextfood = -randint(*self.foodspawn)
+                    self.nextfood = -randint(*self.gamerules.foodspawnrange)
                     while 1:
                         new_f = Food(pos=[
                                 randint(0, self.size[0]//10)*10, 
@@ -85,7 +89,30 @@ class Control:
                         if not (new_f.pos in self.getproperty(attr='pos')):
                             break
                     self += new_f
-                self.nextfood += self.clock.tick()
+                if self.nextmegafood>=0:
+                    self.nextmegafood = -randint(*self.gamerules.megaspawnrange)
+                    while 1:
+                        new_f = MegaFood(pos=[
+                                randint(0, self.size[0]//10)*10, 
+                                randint(0, self.size[1]//10)*10
+                                ])
+                        if not (new_f.pos in self.getproperty(attr='pos')):
+                            break
+                    self += new_f
+                if self.nextslowdown>=0:
+                    self.nextslowdown = -randint(*self.gamerules.slowspawnrange)
+                    while 1:
+                        new_f = Slowdown(pos=[
+                                randint(0, self.size[0]//10)*10, 
+                                randint(0, self.size[1]//10)*10
+                                ])
+                        if not (new_f.pos in self.getproperty(attr='pos')):
+                            break
+                    self += new_f
+                deltatime = self.clock.tick()
+                self.nextfood += deltatime
+                self.nextmegafood += deltatime
+                self.nextslowdown += deltatime
                 for obj in self.objects:
                     obj(self)
                 self.gui(self)
