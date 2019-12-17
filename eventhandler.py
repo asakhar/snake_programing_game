@@ -12,13 +12,13 @@ from gameobject import *
 from snake import Snake, errorAlert
 from dataclasses import dataclass
 
-
-
 class EventHandler:
     
     def file_dialog(self, *text):
-        layout = [[sg.InputText(text[0], key='input', enable_events=True)], [sg.Ok()]]
-        window = sg.Window('Enter the code file name', layout=layout, font='Hack 20')
+        layout = [[sg.InputText(text[0], key='input', enable_events=True)], 
+                   [sg.Ok()]]
+        window = sg.Window('Enter the code file name', 
+                           layout=layout, font='Hack 20')
         while True:
             event, values = window.read()
             if event == 'Ok' or event is None or event == 'Enter':
@@ -33,11 +33,13 @@ class EventHandler:
     class Behavior:     
         controllers : tuple
         
-        def run(self, kwargs): 
+        def run(self, kwargs):
             for event in kwargs.control.events:
                 if event.type==KEYDOWN:
                     for i in self.controllers:
-                        if (event.key==i[1])and((not contra(kwargs.direction, i[0]) or kwargs.health==1)):
+                        if (event.key==i[1])and \
+                          ((not contra(kwargs.direction, i[0]) \
+                            or kwargs.health==1)):
                             return i[0]
             return kwargs.direction
         
@@ -46,7 +48,9 @@ class EventHandler:
             control.pause = not control.pause
         else:
             control.pause = set
-        pygame.display.set_caption('Deaths-> '+', '.join([f'{k}: {str(v)}' for k, v in control.deaths.items()]) if control.pause else 'Snake')
+        pygame.display.set_caption('Deaths-> '+', '.join([f'{k}: {str(v)}' 
+            for k, v in control.deaths.items()]) 
+                if control.pause else 'Snake')
     
     def __call__(self, control):
         for event in control.events:
@@ -72,17 +76,21 @@ class EventHandler:
                         control.direction['p2'] = [0, 1]
                 if event.key==K_r:
                     try:
-                        autosnake = control.getbyattr(type='snake', attr='pn', value='autogreen')
+                        autosnake = control.getbyattr(type='snake', attr='pn', 
+                                                      value='autogreen')
                         control -= autosnake
-                        control.addAutoSnake(self.file_dialog('snakescript1'), 'green')
+                        control.addAutoSnake(self.file_dialog('snakescript1'), 
+                                             'green')
                         self.toggle_pause(control, False)
                     except Exception as e:
                         errorAlert(str(e))
                 if event.key==K_n:
                     try:
-                        autosnake = control.getbyattr(type='snake', attr='pn', value='autoblue')
+                        autosnake = control.getbyattr(type='snake', attr='pn', 
+                                                      value='autoblue')
                         control -= autosnake
-                        control.addAutoSnake(self.file_dialog('snakescript'), 'blue')
+                        control.addAutoSnake(self.file_dialog('snakescript'), 
+                                             'blue')
                         self.toggle_pause(control, False)
                     except Exception as e:
                         errorAlert(str(e))
