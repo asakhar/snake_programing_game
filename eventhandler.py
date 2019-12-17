@@ -33,7 +33,7 @@ class EventHandler:
     class Behavior:     
         controllers : tuple
         
-        def run(self, kwargs):
+        def run(self, kwargs): 
             for event in kwargs.control.events:
                 if event.type==KEYDOWN:
                     for i in self.controllers:
