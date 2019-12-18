@@ -34,7 +34,7 @@ class Snake(Object):
 
     Constructor
 
-                image : image of the object from the folder 'images'
+                image : image of the object
                 pn : player number
                 script: script of behavior
                 pos: position
