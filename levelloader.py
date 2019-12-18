@@ -41,7 +41,7 @@ def get_pixel(img, i, j):
     """
     Get the pixel from the image and check its color, if it is white, then it is 1, if black, then 0.
     This is also an auxiliary function. We transmit the image and pixel coordinates there.
-    Получить пиксель из изображения и проверить его его цвет, если он белый ,то это 1, если черный ,то 0.
+    Получить пиксель из изображения и проверить его цвет, если он белый ,то это 1, если черный ,то 0.
     Это тоже вспомогательная функция.Мы передаем туда изображение и координаты пикселя.
     """
     c = img[i, j]
@@ -61,14 +61,14 @@ def openLevel(name):
 def load(img, size):
     """
     Load level image. "load" is a generator that receives every time there is a block or not, and its coordinates.
-    Подгрузить изображение уровня."load" это генератор, котороый возвращает каждый раз есть или нет блока, и его координаты.
+    Подгрузить изображение уровня."load" это генератор, который возвращает каждый раз есть или нет блока, и его координаты.
     """
     pa = img.load()
     total_len = size[0]//10
     print('Loading level', end='')#сначала просто пишет "Loading level"
-    for i in range(size[0]):#если остаток от деления равен 0,пишем точку,10 точек это 100% загрузки уровня
-        for j in range(size[1]):
-            yield get_pixel(pa, i, j), i, j# генератор
+    for i in range(size[0]):#если остаток от деления равен 0,пишем точку,10 точек это 100% загрузки уровня  # по х
+        for j in range(size[1]):#по y
+            yield get_pixel(pa, i, j), i, j# генератор, перебирает все пиксели
         if not i%total_len:
             print('.', end='')
     print('\nSuccess!')#уровень загружен(Успех!)
