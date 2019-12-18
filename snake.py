@@ -17,7 +17,7 @@ from barrier import Barrier
 
 def errorAlert(*text):
     '''
-    Shows an error message in new window.
+    Shows an error message in new window
     '''
     layout = [[sg.Text(x, key='label', font='Hack 10')] for x in text] + [[sg.Ok()]]
     window = sg.Window('Error', layout=layout, font='Hack 20')
@@ -75,7 +75,7 @@ class Snake(Object):
     def respawn(self, control):
         '''
         In case of 'death' deletes current object from the scene and adds the new one by calling function 'spawn'. 
-        Death counter updates.
+        Death counter updates
         '''
         control -= self
         control += Snake.spawn(control, self.img, self.pn, self.script, 
@@ -87,7 +87,7 @@ class Snake(Object):
     
     def get_data(self, control, direction):
         '''
-        Function that returns information about the direction of the snake head.
+        Function that returns information about the direction of the snake head
         '''
         x = self.headpos[0]
         y = self.headpos[1]
@@ -223,7 +223,7 @@ class Snake(Object):
         
     def spawn(control, image, pn, script, stdir=STAY, deaths=0):
         '''
-        Function that adds Snake to the scene in a random position.
+        Function that adds Snake to the scene in a random position
         '''
         while 1:
             pos=[randint(2, control.size[0]//10-2)*10, randint(2, 
@@ -235,7 +235,7 @@ class Snake(Object):
     
     def destruct(self, control):
         '''
-        Function that provides snake moving by tail destruction.
+        Function that destructs elements in snake tail
         '''
         for i in self.tail:
             control -= i
