@@ -31,15 +31,12 @@ def errorAlert(*text):
 class Snake(Object):
     '''
     Implements scene object class which defines snake
-
     Constructor
-
                 image : image of the object
                 pn : player number
                 script: script of behavior
                 pos: position
                 size: size of the object
-
     '''
     def __init__(self, image, pn, script, pos=[30, 10], size=None, stdir=STAY, 
                  deaths=0):
@@ -241,4 +238,3 @@ class Snake(Object):
             control -= i
             
         super().destruct(control)
-        
