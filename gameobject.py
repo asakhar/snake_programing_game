@@ -5,9 +5,9 @@ Created on Fri Nov 22 16:25:49 2019
 @author: Danila Sirotenko
 """
 """
-Basic class for all subjects of scene are defined by method "dystract", which responsibles for deleting object from scene and mashing texture behind him,
+Basic class for all subjects of scene are defined by method "destruct", which responsibles for deleting object from scene and mashing texture behind him,
 he has atribute "type", which is the type name of this object.
-Базовый класс для всех объектов сцены,для него определен метод "destract" ,который отвечает за удаление объекта со сцены и затирания за ним текстуры,
+Базовый класс для всех объектов сцены,для него определен метод "destruct" ,который отвечает за удаление объекта со сцены и затирания за ним текстуры,
 он имеет атрибут "type", который представляет собой название типа этого объекта.
 """
 import pygame
@@ -20,8 +20,8 @@ UP = [0, -1]
 DOWN = [0, 1]
 DIRECTIONS = [RIGHT, LEFT, UP, DOWN]
 """
-Inplenmenting moves on the coordinate flatness.
-Осуществление движения на координатной плоскости.
+Variants of movement on the coordinate flatness.
+Варинаты движения на координатной плоскости.
 """
 
 WASD = ((UP, K_w), (LEFT, K_a), (DOWN, K_s), (RIGHT, K_d))
@@ -51,7 +51,7 @@ class KeyWordArguments:
     """
 The class that is used in snakescript1 in the def run function, the arguments of this class are passed to it to make it more convenient to get: "kwargs.data",
 just a convenient call argument from this class.
-Класс который используется в snakescript1 в функцию def run,в него передаются аргументы из этого класса,для того чтобы их можно было удобнее извлекать:"kwargs.data",
+Класс который используется в snakescript в функцию def run,в него передаются аргументы из этого класса,для того чтобы их можно было удобнее извлекать:"kwargs.data",
 просто удобный вызов аргумента из этого класса. 
 """
     def __init__(self, **kwargs):#**kwargs - именнованные аргументы,с которыми можно работать ,как со словарем. 
@@ -63,11 +63,12 @@ just a convenient call argument from this class.
             setattr(self, i, kwargs[i])
             
     def __getitem__(self, key):
-        return self.args[key]
-"""
+        """
 To get an argument through square brackets and quotation marks.
 Чтобы получить аргумента через квадратные скобки и ковычки.
 """
+        return self.args[key]
+
 class Object:
     """
 The base class, which is any object on the stage, has a constructor that accepts an object type (by default (default), the object type is an object).
@@ -75,18 +76,25 @@ It has a “call” function (by default it is empty), it is called every time t
 those. each object is called, so the base class must contain this method).
 The “destruct” method is responsible for removing an object from the scene.
 
-Базовый класс который представляет собой любой объект на сцене,у него есть конструктор,который принимает тип объекта(по дефолту(по умолчанию) тип объекта - это объект).
-У есть функция "call"(по умолчанию она пустая),она вызывается каждую смену сцены(каждый тик).(В одном из цикла "control" вызывается каждый объект,вызов объекта это и есть "call",
-т.е. каждый объект вызывается ,поэтому базовый класс должен содержать этот метод).
-Метод "destruct" отвечает за удаление объекта со сцены.
     """
     def __init__(self, type='object'):
+        """
+        Базовый класс который представляет собой любой объект на сцене,у него есть конструктор,
+        который принимает тип объекта(по дефолту(по умолчанию) тип объекта - это объект).
+        """
         self.type = type
         
     def __call__(self):
+        """
+        У есть функция "call"(по умолчанию она пустая),она вызывается каждую смену сцены(каждый тик).(В одном из циклов "control" вызывается каждый объект,вызов объекта это и есть "call",
+        т.е. каждый объект вызывается ,поэтому базовый класс должен содержать этот метод).
+        """
         pass
     
     def destruct(self, control):
+        """
+        Метод "destruct" отвечает за удаление объекта со сцены.
+        """
         try:
             control.objects.remove(self)#переход в control и удаление объекта
         except:
