@@ -44,7 +44,7 @@ class Snake(Object):
     def __init__(self, image, pn, script, pos=[30, 10], size=None, stdir=STAY, 
                  deaths=0):
          '''
-         Automatic method for construction 
+         Constructor 
          '''   
         super().__init__(type='snake')
         self.img = pygame.image.load(f'images/{image}.png') if not isinstance(
@@ -102,12 +102,12 @@ class Snake(Object):
     
     def __call__(self, control):
         '''
-        Function defines snake actions:
+        Function that defines snake actions:
         Gets directions and defines its correctness or rises an Exception
-        Reduces health if snake does not get food, then respawns snake
+        Reduces health if snake does not get food, then respawns if snake runs out of health
         Respawns snake if it сrashes into the barrier or itself
-        Adds health from food and 'megafood'
-        Reduces snake speed if it stumbles upon an 'slowdown' element and then raises to normal speed
+        Adds health points from food and 'megafood'
+        Reduces snake speed if snake stumbles upon an 'slowdown' element and then raises speed level to normal
         '''
         if self.health is None:
             self.health = control.gamerules.start_health
