@@ -16,6 +16,9 @@ from snaketail import SnakeTail
 from barrier import Barrier
 
 def errorAlert(*text):
+    '''
+    Shows an error message in new window.
+    '''
     layout = [[sg.Text(x, key='label', font='Hack 10')] for x in text] + [[sg.Ok()]]
     window = sg.Window('Error', layout=layout, font='Hack 20')
     while True:
@@ -26,8 +29,23 @@ def errorAlert(*text):
 
 
 class Snake(Object):
+    '''
+    Implements scene object class which defines snake
+
+    Constructor
+
+                image : image of the object from the folder 'images'
+                pn : player number
+                script: script of behavior
+                pos: position
+                size: size of the object
+
+    '''
     def __init__(self, image, pn, script, pos=[30, 10], size=None, stdir=STAY, 
                  deaths=0):
+         '''
+         Automatic method for construction 
+         '''   
         super().__init__(type='snake')
         self.img = pygame.image.load(f'images/{image}.png') if not isinstance(
                 image, 
@@ -37,6 +55,7 @@ class Snake(Object):
         self.clock = Clock()
         self.clock.tick()
         self.headpos = pos.copy()
+        self.normal_speed = 180
         self.speed = 180#80
         self.delayer = 0
         self.health = None
@@ -51,8 +70,13 @@ class Snake(Object):
         self.cycles = 0
         self.cycletime = 400
         self.delay = 0
+        self.slowdown_timer = None
     
     def respawn(self, control):
+        '''
+        In case of 'death' deletes current object from the scene and adds the new one by calling function 'spawn'. 
+        Death counter updates.
+        '''
         control -= self
         control += Snake.spawn(control, self.img, self.pn, self.script, 
                                self.stdir, self.deaths+1)
@@ -62,6 +86,9 @@ class Snake(Object):
 #            control += i
     
     def get_data(self, control, direction):
+        '''
+        Function that returns information about the direction of the snake head.
+        '''
         x = self.headpos[0]
         y = self.headpos[1]
         while 1:
@@ -74,6 +101,14 @@ class Snake(Object):
                 return direction, obj.type if obj else None, abs(self.headpos[1]-y) + abs(self.headpos[0]-x)
     
     def __call__(self, control):
+        '''
+        Function defines snake actions:
+        Gets directions and defines its correctness or rises an Exception
+        Reduces health if snake does not get food, then respawns snake
+        Respawns snake if it сrashes into the barrier or itself
+        Adds health from food and 'megafood'
+        Reduces snake speed if it stumbles upon an 'slowdown' element and then raises to normal speed
+        '''
         if self.health is None:
             self.health = control.gamerules.start_health
         data = [
@@ -161,9 +196,16 @@ class Snake(Object):
                         control += Barrier(pos=i)
                     return
             if self.headpos in control.getproperty(attr='pos', type='food'):
-                control -= control.getbyattr(type='food', value=self.headpos, 
+                food = control.getbyattr(type='food', value=self.headpos, 
                                              attr='pos')
+                if hasattr(food, 'mega'):
+                    self.health += 4
                 self.health += 1
+                control -= food
+                
+            if self.headpos in control.getproperty(attr='pos', type='slowdown'):
+                self.speed = self.normal_speed//2
+                self.slowdown_timer = -4000
             tmp = SnakeTail(self.img, self.pn, pos=self.headpos, size=self.size)
             control += tmp
             self.tail.append(tmp)
@@ -173,8 +215,16 @@ class Snake(Object):
         deltatime = self.clock.tick()
         self.delayer += deltatime
         self.delay += deltatime
-            
+        if self.slowdown_timer is not None:
+            self.slowdown_timer += deltatime
+            if self.slowdown_timer > 0:
+                self.slowdown_timer = None
+                self.speed = self.normal_speed
+        
     def spawn(control, image, pn, script, stdir=STAY, deaths=0):
+        '''
+        Function that adds Snake to the scene in a random position.
+        '''
         while 1:
             pos=[randint(2, control.size[0]//10-2)*10, randint(2, 
                  control.size[1]//10-2)*10]
@@ -184,6 +234,9 @@ class Snake(Object):
                      deaths=deaths)
     
     def destruct(self, control):
+        '''
+        Function that provides snake moving by tail destruction.
+        '''
         for i in self.tail:
             control -= i
             
