@@ -23,8 +23,8 @@ class MegaFood(Object):
         self.mega = True #is the object "mega" 
         
     def __call__(self, control):
-        '''If there is no object in the field, the function creates it.
-        If there is an object in the field, the function counts the time of its existence'''
+        '''If there is no object in the scene, the function creates it.
+        If there is an object in the scene, the function counts the time of its existence'''
         #if the object is missing create it
         if not self.drawn: 
             control.window.blit(self.img, self.pos)
