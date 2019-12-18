@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Nov 29 15:19:20 2019
+Created on Fri Nov 22 17:19:06 2019
 
 @author: Lookmnv
 """
@@ -12,10 +12,10 @@ from gameobject import *
 from snake import Snake, errorAlert
 from dataclasses import dataclass
 
-
-
 class EventHandler:
-    '''A simple event handling class, which manages callbacks to be executed.'''
+    '''
+    A simple event handling class, which manages callbacks to be executed
+    '''
     def file_dialog(self, *text):
         layout = [[sg.InputText(text[0], key='input', enable_events=True)], 
                    [sg.Ok()]]
@@ -28,14 +28,15 @@ class EventHandler:
                 return values['input']
         
     def __init__(self):
-        '''Constructor'''
+        '''Constructor '''
         self.flag_pause=True
         self.flag_restart=False
     
-    @dataclass
     class Behavior:     
-        ''' A simple class, which describes the behavior of the snake, that moves by a keyboard. '''
-        controllers : tuple '''type of the control'''
+        '''A simple class, which describes the behavior of the snake, that moves by a keyboard
+        '''
+        def __init__(self, controllers):
+            self.controllers = controllers
         
         def run(self, kwargs):
             for event in kwargs.control.events:
@@ -48,8 +49,9 @@ class EventHandler:
             return kwargs.direction
         
     def toggle_pause(self, control, set=None):
-        '''A functoin, which pauses the game 
-        set - set True or False'''
+        ''' A function, which pauses the game
+            set - set True or False
+        ''' 
         if set == None:
             control.pause = not control.pause
         else:
@@ -60,45 +62,55 @@ class EventHandler:
     
     def __call__(self, control):
         '''A function of event handler
-        conrol - scene'''
+        control - scene'''
         for event in control.events:
             if event.type==QUIT:
                 control.run = False
             if event.type==KEYDOWN:
-                if False:
-                    if event.key==K_RIGHT and (control.direction['p1']!=[-1, 0] or control.getbyattr(type='snake', attr='pn', value='p1').health==1):
-                        control.direction['p1'] = [1, 0]
-                    if event.key==K_LEFT and (control.direction['p1']!=[1, 0] or control.getbyattr(type='snake', attr='pn', value='p1').health==1):
-                        control.direction['p1'] = [-1, 0]
-                    if event.key==K_UP and (control.direction['p1']!=[0, 1] or control.getbyattr(type='snake', attr='pn', value='p1').health==1):
-                        control.direction['p1'] = [0, -1]
-                    if event.key==K_DOWN and (control.direction['p1']!=[0, -1] or control.getbyattr(type='snake', attr='pn', value='p1').health==1):
-                        control.direction['p1'] = [0, 1]
-                    if event.key==K_d and (control.direction['p2']!=[-1, 0] or control.getbyattr(type='snake', attr='pn', value='p2').health==1):
-                        control.direction['p2'] = [1, 0]
-                    if event.key==K_a and (control.direction['p2']!=[1, 0] or control.getbyattr(type='snake', attr='pn', value='p2').health==1):
-                        control.direction['p2'] = [-1, 0]
-                    if event.key==K_w and (control.direction['p2']!=[0, 1] or control.getbyattr(type='snake', attr='pn', value='p2').health==1):
-                        control.direction['p2'] = [0, -1]
-                    if event.key==K_s and (control.direction['p2']!=[0, -1] or control.getbyattr(type='snake', attr='pn', value='p2').health==1):
-                        control.direction['p2'] = [0, 1]
+                if True:
+                    player1 = control.getbyattr(type='snake', attr='pn', value='p1')
+                    player2 = control.getbyattr(type='snake', attr='pn', value='p2')
+                    if player1:
+                        if event.key==K_RIGHT and (player1.direction!=[-1, 0] or player1.health==1):
+                            player1.direction = [1, 0]
+                        if event.key==K_LEFT and (player1.direction!=[1, 0] or player1.health==1):
+                            player1.direction = [-1, 0]
+                        if event.key==K_UP and (player1.direction!=[0, 1] or player1.health==1):
+                            player1.direction = [0, -1]
+                        if event.key==K_DOWN and (player1.direction!=[0, -1] or player1.health==1):
+                            player1.direction = [0, 1]
+                    if player2:
+                        if event.key==K_d and (player2.direction!=[-1, 0] or player2.health==1):
+                            player2.direction = [1, 0]
+                        if event.key==K_a and (player2.direction!=[1, 0] or player2.health==1):
+                            player2.direction = [-1, 0]
+                        if event.key==K_w and (player2.direction!=[0, 1] or player2.health==1):
+                            player2.direction = [0, -1]
+                        if event.key==K_s and (player2.direction!=[0, -1] or player2.health==1):
+                            player2.direction = [0, 1]
                 if event.key==K_r:
                     try:
                         autosnake = control.getbyattr(type='snake', attr='pn', 
-                                                      value='autogreen')
-                        control -= autosnake
-                        control.addAutoSnake(self.file_dialog('snakescript1'), 
-                                             'green')
+                                                      value='auto0')
+                        try:
+                            control -= autosnake
+                        except:
+                            pass
+                        control.addAutoSnake(self.file_dialog('snakescript1.py'), 'red', 
+                                             'auto0')
                         self.toggle_pause(control, False)
                     except Exception as e:
                         errorAlert(str(e))
                 if event.key==K_n:
                     try:
-                        autosnake = control.getbyattr(type='snake', attr='pn', 
-                                                      value='autoblue')
-                        control -= autosnake
-                        control.addAutoSnake(self.file_dialog('snakescript'), 
-                                             'blue')
+                        autosnake = control.getbyattr(type='snake', attr='pn',
+                                                      value='auto1')
+                        try:
+                            control -= autosnake
+                        except:
+                            pass
+                        control.addAutoSnake(self.file_dialog('snakescript.py'), 'green',
+                                             'auto1')
                         self.toggle_pause(control, False)
                     except Exception as e:
                         errorAlert(str(e))
