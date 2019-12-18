@@ -18,6 +18,9 @@ from food import Food
 from levelloader import load, openLevel
 from pygame.time import Clock
 from control import Control, errorAlert
+from turtleobj import Turtle
+from slowdown import Slowdown
+from megafood import MegaFood
 
 if __name__=='__main__':
     '''
@@ -25,8 +28,10 @@ if __name__=='__main__':
     
     opening level and placing blocks on the scene
     '''
-    level, size = openLevel('level1') #iterate the level and size of the scene
+    level, size = openLevel('level1')  #iterate the level and size of the scene
     game = Control(size=(size[0]*10, size[1]*10))
+    game += Turtle(pos=[20, 20])
+    game += Turtle(pos=[30, 20])
     level_iter = iter(load(level, size))
     while 1: #exception checking
         try:
@@ -36,10 +41,10 @@ if __name__=='__main__':
         if not el:
             break #if not find the element stops
         if not el[0]:
-            game += Barrier('block', pos=[el[1]*10, el[2]*10])  #establish barriers and position
+            game += Barrier('block', pos=[el[1]*10, el[2]*10]) #establish barriers and position
     '''keyboard-controlling snake(s)'''
-#    game += Snake.spawn(game, 'red', 'p1', EventHandler.Behavior(WASD))
-    game += Snake.spawn(game, 'green', 'p2', EventHandler.Behavior(ARROWS))
+    game += Snake.spawn(game, 'red', 'p2', EventHandler.Behavior(WASD), stdir=STAY)
+    game += Snake.spawn(game, 'green', 'p1', EventHandler.Behavior(ARROWS), stdir=STAY)
     '''open template.py in idle'''
 #    os.system('start idle -e template.py')
 #    os.system('start idle -e snakescript1.py')
@@ -51,10 +56,10 @@ if __name__=='__main__':
     '''
     run game and error handling
     '''
-    try:
+    try:  
         game()
-    except Exception as e: # create crashreport and print all exceptions
-        f = open('crashreport.txt', 'w')
+    except Exception as e:
+        f = open('crashreport.txt', 'w')  # create crashreport and print all exceptions
         f.writelines(traceback.format_exception(type(e), e, e.__traceback__))
         f.close()
         error1 = True
