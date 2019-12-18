@@ -40,9 +40,6 @@ class Snake(Object):
     '''
     def __init__(self, image, pn, script, pos=[30, 10], size=None, stdir=STAY, 
                  deaths=0):
-         '''
-         Constructor 
-         '''   
         super().__init__(type='snake')
         self.img = pygame.image.load(f'images/{image}.png') if not isinstance(
                 image, 
@@ -52,13 +49,11 @@ class Snake(Object):
         self.clock = Clock()
         self.clock.tick()
         self.headpos = pos.copy()
-        self.normal_speed = 180
-        self.speed = 180#80
+        self.normal_speed = None
+        self.speed = None
         self.delayer = 0
         self.health = None
         self.pn = pn
-        #self.tail = [SnakeTail(self.img, pos=self.headpos, size=self.size)]
-        #self.tail = [[self.headpos[0], self.headpos[1], False]]
         self.tail = []
         self.direction = stdir.copy()
         self.stdir = stdir.copy()
@@ -77,13 +72,13 @@ class Snake(Object):
         control -= self
         control += Snake.spawn(control, self.img, self.pn, self.script, 
                                self.stdir, self.deaths+1)
-#        drop = [Food(pos=i.pos) for i in self.tail if choice([True]*2+[False]*1)]
+        # drop = [Food(pos=i.pos) for i in self.tail if choice([True]*2+[False]*1)]
         
-#        for i in drop:
-#            control += i
+        # for i in drop:
+        #     control += i
     
     def get_data(self, control, direction):
-        '''
+         '''
         Function that returns information about the direction of the snake head
         '''
         x = self.headpos[0]
@@ -108,6 +103,9 @@ class Snake(Object):
         '''
         if self.health is None:
             self.health = control.gamerules.start_health
+        if self.normal_speed is None:
+            self.normal_speed = control.gamerules.normalspeed
+            self.speed = self.normal_speed
         data = [
                 self.get_data(control, UP), 
                 self.get_data(control, LEFT), 
@@ -121,10 +119,11 @@ class Snake(Object):
                     health=self.health, 
                     control=control,
                     deaths=self.deaths,
-                    cycles=self.cycles)
-            res = self.script.run(kwargs)
+                    cycles=self.cycles,
+                    pos=self.headpos)
+            self.direction = self.script.run(kwargs)
             del kwargs
-            if (res not in DIRECTIONS)and(not isinstance(self.script, 
+            if (self.direction not in DIRECTIONS)and(not isinstance(self.script, 
                control.eventhandler.Behavior)):
                 raise Exception('Wrong direction!')
         except Exception as e:
@@ -134,11 +133,10 @@ class Snake(Object):
             else:
                 errorAlert(*traceback.format_exception(type(e), e, 
                                                        e.__traceback__))
-                res = self.direction
-            control.eventhandler.toggle_pause(control, True)
-            self.respawn(control)
-        
-        self.direction = res
+                
+            control -= self
+            return
+            
         
         if self.delay > self.cycletime:
             self.delay = 0
@@ -150,7 +148,7 @@ class Snake(Object):
             return
             
         if (self.delayer >= 200 - self.speed)and self.direction!=STAY:
-            #self.speed = 50 - self.health*5
+            self.speed = 200 - self.health*control.gamerules.speeddependsonhealth
             self.cycles += 1
             self.delayer = 0
             self.headpos[0] += self.size[0]*self.direction[0]
@@ -219,7 +217,7 @@ class Snake(Object):
                 self.speed = self.normal_speed
         
     def spawn(control, image, pn, script, stdir=STAY, deaths=0):
-        '''
+         '''
         Function that adds Snake to the scene in a random position
         '''
         while 1:
@@ -231,10 +229,11 @@ class Snake(Object):
                      deaths=deaths)
     
     def destruct(self, control):
-        '''
+         '''
         Function that destructs elements in snake tail
         '''
         for i in self.tail:
             control -= i
             
         super().destruct(control)
+        
