@@ -36,7 +36,8 @@ class Control:
     
     def __init__(self, 
                  bgcolor=pygame.Color('White'), 
-                 size=(400, 400)
+                 size=(400, 400),
+                 mouse_handler=None
                  ):
         """
         Parameters
@@ -73,6 +74,7 @@ class Control:
         self.deaths = {}
         self.events = []
         self.gui = GUI(pos=(-7, size[1]+30))
+        self.mouse_handler = mouse_handler
         
     def __iadd__(self, obj):
         '''
@@ -96,6 +98,8 @@ class Control:
         while self.run:
             if run_once:
                 self.run = False
+            if self.mouse_handler is not None:
+                self.mouse_handler(self)
             self.events = pygame.event.get()
             self.eventhandler(self)
             if self.run and not self.pause:
