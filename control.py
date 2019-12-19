@@ -28,8 +28,8 @@ class Control:
         Implements scene object class which defines how game works.
         
         Constructor
-                bgcolor : pygame.Color - changes the background color
-                size : Tuple[2] - defines the size of the window
+                bgcolor : pygame.Color - changes the background color.
+                size : Tuple[2] - defines the size of the window.
             
             Initializes game scene.
     '''
@@ -77,17 +77,25 @@ class Control:
     def __iadd__(self, obj):
         '''
         "+=" operator overloading.
-        Use to add objects to scene
+        
+        Use to add objects to scene.
         '''
         self.objects.append(obj)
         return self
     
-    def __call__(self):
+    def close(self):
+        self.gui.window.close()
+        pygame.quit()
+    
+    def __call__(self, run_once=False):
         '''
-        Call magic function
-        Runs the scene
+        "Call" magic function.
+        
+        Runs the scene.
         '''
         while self.run:
+            if run_once:
+                self.run = False
             self.events = pygame.event.get()
             self.eventhandler(self)
             if self.run and not self.pause:
@@ -127,27 +135,27 @@ class Control:
                 self.nextslowdown += deltatime
                 for obj in self.objects:
                     obj(self)
-                self.gui(self)
                 for i in self.getproperty(type='snake', attr='pn'):
                     cur = self.getbyattr(type='snake', attr='pn', value=i)
                     self.deaths[i] = cur.deaths
                 pygame.display.flip()
               
-            else:
-                pass
+            
+            self.gui(self)
             
     def __getitem__(self, index):
         '''
-        Getitem overloading
+        Getitem overloading.
         
-        returns object by index
+        returns object by index.
         '''
         return self.objects[index]
     
     def __isub__(self, obj):
         '''
         "-=" operator overloading.
-        Use to delete object from scene
+        
+        Use to delete object from.
         '''
         obj.destruct(self)
         return self
@@ -160,16 +168,16 @@ class Control:
         ----------
         type : str|None, optional
             DESCRIPTION. The default is None.
-            type of objects for searching the property
+            type of objects for searching the property.
         attr : str, optional
             DESCRIPTION. The default is 'pos'.
-            property name
+            property name.
 
         Yields
         ------
         Any
             DESCRIPTION.
-            Selected property of each object at the scene
+            Selected property of each object at the scene.
         """
 
         for i in self.objects:
@@ -185,19 +193,19 @@ class Control:
         ----------
         type : str|None, optional
             DESCRIPTION. The default is None.
-            type of an object to be returned
+            type of an object to be returned.
         attr : str
             DESCRIPTION
-            name of the property to compare
+            name of the property to compare.
         value : Any
             DESCRIPTION.
-            property value
+            property value.
 
         Returns
         -------
         object : GameObject
             DESCRIPTION.
-            first object from scene which properties' value is equal to "value" arg
+            first object from scene which properties' value is equal to "value" arg.
         """
         
         for i in self.objects:
@@ -215,13 +223,13 @@ class Control:
         ----------
         type : str|None, optional
             DESCRIPTION. The default is None.
-            type of objects to be yielded
+            type of objects to be yielded.
             
         Yields
         ------
         object : GameObject
             DESCRIPTION.
-            objects of given type
+            objects of given type.
             
         """
         
@@ -232,51 +240,49 @@ class Control:
     def addAutoSnake(self, scriptpath : str, color : str, name : str = ''):
         """
         DESCRIPTION.
-        Loads custom script and spawns new snake
-        If file can't be found or another exception is thrown shows an error messasage/
+        Loads custom script and spawns new snake.
+        If file can't be found or another exception is thrown shows an error messasage.
         
         Parameters
         ----------
         scriptpath : str
             DESCRIPTION.
-            path to the snake script file(e.g. snackescript.py)
+            path to the snake script file(e.g. snackescript.py).
         color : str
             DESCRIPTION.
-            color file name
+            color file name.
         name : str, optional
             DESCRIPTION. The default is ''.
-            the name of snake to be spawned
+            the name of snake to be spawned.
             
         Returns
         -------
         None.
 
         """
-        
-        while 1:
-            try:
-                f = open(scriptpath, 'r')
-                lines = ''.join(f.readlines())+'\nControl.script = Behavior()'
-                f.close()
-                exec(lines)
-                autosnake = Snake.spawn(
-                        self, 
-                        color, 
-                        'auto'+name, 
-                        Control.script, 
-                        stdir=RIGHT
-                        )
-                self += autosnake
-                return
-            except FileNotFoundError as e:
-                errorAlert(*traceback.format_exception(type(e), e, 
-                                                       e.__traceback__))
-                #scriptapath = self.eventhandler.file_dialog(scriptapath)  Depricated
-            except Exception as e:
-                errorAlert(*traceback.format_exception(type(e), e, 
-                                                       e.__traceback__))
-                break
-        
+
+        try:
+            f = open(scriptpath, 'r')
+            lines = ''.join(f.readlines())+'\nControl.script = Behavior()'
+            f.close()
+            exec(lines)
+            autosnake = Snake.spawn(
+                    self, 
+                    color, 
+                    'auto'+name, 
+                    Control.script, 
+                    stdir=RIGHT
+                    )
+            self += autosnake
+            return
+        except FileNotFoundError as e:
+            errorAlert(*traceback.format_exception(type(e), e, 
+                                                   e.__traceback__))
+            # scriptapath = self.eventhandler.file_dialog(scriptapath)  Depricated
+        except Exception as e:
+            errorAlert(*traceback.format_exception(type(e), e, 
+                                                   e.__traceback__))
+    
 def errorAlert(*text):
     """
     DESCRIPTION.

@@ -1,1 +1,1 @@
-{"encounter_tail": "set_block_self", "health_reduce": false, "start_health": 4, "foodspawnrange": [600, 10000], "megaspawnrange": [10000, 20000], "slowspawnrange": [5000, 10000]}
+{"encounter_tail": "set_food", "health_reduce": false, "start_health": 4, "foodspawnrange": [600, 10000], "megaspawnrange": [10000, 20000], "slowspawnrange": [5000, 10000], "normalspeed": 100, "speeddependsonhealth": 5}
