@@ -13,9 +13,7 @@ from snake import Snake, errorAlert
 from dataclasses import dataclass
 
 class EventHandler:
-    '''
-    A simple event handling class, which manages callbacks to be executed
-    '''
+    
     def file_dialog(self, *text):
         layout = [[sg.InputText(text[0], key='input', enable_events=True)], 
                    [sg.Ok()]]
@@ -28,13 +26,12 @@ class EventHandler:
                 return values['input']
         
     def __init__(self):
-        '''Constructor '''
+        ''' '''
         self.flag_pause=True
         self.flag_restart=False
     
     class Behavior:     
-        '''A simple class, which describes the behavior of the snake, that moves by a keyboard
-        '''
+        '''Класс, описывающий поведения змейки, управляемой с клавиатуры'''
         def __init__(self, controllers):
             self.controllers = controllers
         
@@ -49,9 +46,6 @@ class EventHandler:
             return kwargs.direction
         
     def toggle_pause(self, control, set=None):
-        ''' A function, which pauses the game
-            set - set True or False
-        ''' 
         if set == None:
             control.pause = not control.pause
         else:
@@ -61,11 +55,12 @@ class EventHandler:
                 if control.pause else 'Snake')
     
     def __call__(self, control):
-        '''A function of event handler
-        control - scene'''
+        '''Функция обработчика событий
+        control - сцена'''
         for event in control.events:
             if event.type==QUIT:
                 control.run = False
+                control.close()
             if event.type==KEYDOWN:
                 if True:
                     player1 = control.getbyattr(type='snake', attr='pn', value='p1')
