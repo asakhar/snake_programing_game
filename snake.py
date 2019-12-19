@@ -16,9 +16,7 @@ from snaketail import SnakeTail
 from barrier import Barrier
 
 def errorAlert(*text):
-    '''
-    Shows an error message in new window
-    '''
+    '''Shows an error message in new window'''
     layout = [[sg.Text(x, key='label', font='Hack 10')] for x in text] + [[sg.Ok()]]
     window = sg.Window('Error', layout=layout, font='Hack 20')
     while True:
@@ -78,8 +76,10 @@ class Snake(Object):
         #     control += i
     
     def get_data(self, control, direction):
-         '''
+        '''
         Function that returns information about the direction of the snake head
+        obj takes an object on the scene at x,y coordinates
+        it can be none therefore, a check is started
         '''
         x = self.headpos[0]
         y = self.headpos[1]
@@ -88,7 +88,7 @@ class Snake(Object):
             y += direction[1]*10
             obj = control.getbyattr(attr='pos', value=[x, y])
             if obj or (y < 0) or (x < 0) or (x > control.size[0]) or (y > control.size[1]):
-                if obj and obj.type == 'snake' and hasattr(obj, 'parentid') and obj.parentid == self.pn:
+                if obj is not None and obj.type == 'snake' and hasattr(obj, 'parentid') and obj.parentid == self.pn:
                     return direction, 'self', abs(self.headpos[1]-y) + abs(self.headpos[0]-x)
                 return direction, obj.type if obj else None, abs(self.headpos[1]-y) + abs(self.headpos[0]-x)
     
@@ -199,8 +199,11 @@ class Snake(Object):
                 control -= food
                 
             if self.headpos in control.getproperty(attr='pos', type='slowdown'):
+                slowdown = control.getbyattr(type='slowdown', value=self.headpos, 
+                                             attr='pos')
                 self.speed = self.normal_speed//2
                 self.slowdown_timer = -4000
+                control -= slowdown
             tmp = SnakeTail(self.img, self.pn, pos=self.headpos, size=self.size)
             control += tmp
             self.tail.append(tmp)
@@ -217,7 +220,7 @@ class Snake(Object):
                 self.speed = self.normal_speed
         
     def spawn(control, image, pn, script, stdir=STAY, deaths=0):
-         '''
+        '''
         Function that adds Snake to the scene in a random position
         '''
         while 1:
@@ -229,8 +232,8 @@ class Snake(Object):
                      deaths=deaths)
     
     def destruct(self, control):
-         '''
-        Function that destructs elements in snake tail
+        '''
+        Function that destructs elements from the scene
         '''
         for i in self.tail:
             control -= i
