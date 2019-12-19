@@ -9,10 +9,10 @@ from gameobject import Object
 from pygame.time import Clock
 
 class MegaFood(Object):
-    
+    '''Implements the object class which is responsible for MegaFood'''
     def __init__(self, image='megafood', pos=[0, 0], size=None):
+        '''Implements the object class which is responsible for MegaFood'''
         super().__init__(type='food')
-         '''Implements the object class which is responsible for MegaFood'''
         self.img = pygame.image.load(f'images/{image}.png') #graphical representation of the object
         self.size = size if size else self.img.get_size() #size of object
         self.pos = pos.copy() #position of the object
