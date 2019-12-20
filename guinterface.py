@@ -11,17 +11,17 @@ import os.path
 from PIL import Image
 
 def ColorChooserButton_v2(button_text, target=(None, None), image_filename=None, image_data=None, image_size=(None, None),
-image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
-button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
-key=None, metadata=None, enable_events=True):
+                       image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
+                       button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
+                       key=None, metadata=None, enable_events=True):
     """Function that returns the button in the window of the pregame interface with all options included, the 
     function itself is inside the main class "GUI"
-    """   
+    """
     return sg.Button(button_text=button_text, button_type=sg.BUTTON_TYPE_COLOR_CHOOSER, target=target,
-    image_filename=image_filename, image_data=image_data, image_size=image_size,
-    image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size,
-    auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-    bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata, enable_events=enable_events)
+                  image_filename=image_filename, image_data=image_data, image_size=image_size,
+                  image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size,
+                  auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata, enable_events=enable_events)
 
 def create_from_template(color):
     """ Function that creates an image for the "Snake" from the colour that is chosen by the player. In case the colour is already in 
@@ -111,6 +111,7 @@ class GUI:
                                  values[f'color{index}'], f'{index}')
             
         return 1
+            
         
 if __name__=='__main__':        
     a = GUI()
