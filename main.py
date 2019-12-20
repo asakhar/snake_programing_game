@@ -59,7 +59,7 @@ if __name__=='__main__':
             el = next(level_iter) # returns the next iterator value
         except:
             el = None # skips element
-        if not el:
+        if el is None:
             break #if not find the element stops
         if not el[0]:
             game += Barrier('block', pos=[el[1]*10, el[2]*10])  #establish barriers and position
@@ -71,9 +71,9 @@ if __name__=='__main__':
     # os.system('start idle -e snakescript.py')
     
     '''add script-controlling snakes'''
-    game.addAutoSnake('snakescript.py', 'blue', '0')
-    game.addAutoSnake('snakescript.py', 'green', '1')
-    game.addAutoSnake('snakescript.py', 'red', '2')
+    game.addAutoSnake('snakescript.py', 'blue', '1')
+    game.addAutoSnake('snakescript.py', 'green', '2')
+    game.addAutoSnake('snakescript.py', 'red', '0')
     error1 = False
     '''
     run game and error handling
