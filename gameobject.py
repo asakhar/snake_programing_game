@@ -37,10 +37,10 @@ Same thing only for arrows.
 
 def contra(a, b):
     """
-A function for determining whether the directions A and B are opposite, i.e. if the directions are opposite, are current and selected, then he does not use them,
-because the snake will eat itself.
-Функция для определения являются ли направления А и Б противоположными,т.е. если направления противоположны,текущее и выбранное ,то он их не использует,
-потому что змейка сама себя тогда съест.
+    A function for determining whether the directions A and B are opposite, i.e. if the directions are opposite, are current and selected, then he does not use them,
+    because the snake will eat itself.
+    Функция для определения являются ли направления А и Б противоположными,т.е. если направления противоположны,текущее и выбранное ,то он их не использует,
+    потому что змейка сама себя тогда съест.
     """
     c = [a[0]+b[0], a[1]+b[1]]
     if (not c[0]) and (not c[1]):
