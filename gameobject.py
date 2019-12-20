@@ -36,7 +36,7 @@ Same thing only for arrows.
 """
 
 def contra(a, b):
-     """
+    """
 A function for determining whether the directions A and B are opposite, i.e. if the directions are opposite, are current and selected, then he does not use them,
 because the snake will eat itself.
 Функция для определения являются ли направления А и Б противоположными,т.е. если направления противоположны,текущее и выбранное ,то он их не использует,
@@ -53,7 +53,7 @@ The class that is used in snakescript1 in the def run function, the arguments of
 just a convenient call argument from this class.
 Класс который используется в snakescript в функцию def run,в него передаются аргументы из этого класса,для того чтобы их можно было удобнее извлекать:"kwargs.data",
 просто удобный вызов аргумента из этого класса. 
-"""
+    """
     def __init__(self, **kwargs):#**kwargs - именнованные аргументы,с которыми можно работать ,как со словарем. 
         self.args = kwargs
         for i in kwargs:
@@ -66,7 +66,7 @@ just a convenient call argument from this class.
         """
 To get an argument through square brackets and quotation marks.
 Чтобы получить аргумента через квадратные скобки и ковычки.
-"""
+        """
         return self.args[key]
 
 class Object:
