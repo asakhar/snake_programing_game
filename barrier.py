@@ -12,11 +12,11 @@ import pygame
 from gameobject import Object
 '''
 берем класс Object из файла gameobject представляющий собой визуальный объект
-
 '''
+from pygame.time import Clock
 
 class Barrier(Object):
-    '''описание еды
+    '''описание барьера
         size:   размер, берется из дэфолтного файла, если не не задан другой файл 
         pos:    позиция
         drawn:  отображен ли уже объект
@@ -25,7 +25,7 @@ class Barrier(Object):
         img:    изображение объекта
 
     '''
-    def __init__(self, image, pos=[0, 0], size=None):
+    def __init__(self, image, pos=[0, 0], size=None, countdown=None):
         '''
         задаем начальные значения
         '''
@@ -34,8 +34,14 @@ class Barrier(Object):
         self.size = size if size else self.img.get_size()
         self.pos = pos
         self.drawn = False
+        self.countdown = -countdown if countdown else None
+        self.clock = Clock()
         
     def __call__(self, control):
+        if not self.countdown is None:
+            self.countdown += self.clock.tick()
+            if self.countdown >= 0:
+                control -= self
         '''
         отрисовка барьера
         '''
