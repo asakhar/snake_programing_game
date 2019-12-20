@@ -56,17 +56,20 @@ class Portal(Object):
         уничтожает телепорты и прошлую змейку
         (противоположные порталы имеют противоположные индексы)
         '''
-        snake_tp = control.getbyattr(type='snake', attr='headpos', value=self.pos)
-        if snake_tp is not None:
-            dest_portal = control.getbyattr(type='portal', attr='portalid', value=-self.portalid)
-            snake_tp.headpos = dest_portal.pos.copy()
-            snake_tp.headpos = [snake_tp.headpos[0] + snake_tp.direction[0]*10,
-                                snake_tp.headpos[1] + snake_tp.direction[1]*10]
-            tail_pos = snake_tp.headpos.copy()
-            snake_tail = control.getbyattr(type='snake', attr='pos', value=self.pos)
-            snake_tail.pos = tail_pos
-            snake_tail.drawn = False
-            self.drawn = False
+        snake_tp = control.getbyattr(type='snake', attr='headpos', value=self.pos)#есть ли змейка голова которой на телепорте
+        if snake_tp is not None:#если змейка нашлась
+            dest_portal = control.getbyattr(type='portal', attr='portalid', value=-self.portalid)#находим противоположный портал(выход)
+            snake_tp.headpos = dest_portal.pos.copy()#переносим координаты портала в координаты головы змейки
+            snake_tp.headpos = [snake_tp.headpos[0] + snake_tp.direction[0]*10,#
+                                snake_tp.headpos[1] + snake_tp.direction[1]*10]#сделать 1 шаг головой, чтобы выйти из портала
+            if snake_tp.headpos in control.getproperty(attr='pos'):#случай когда после телепорта голова змейки спавнится в стене
+                snake_tp.respawn(control)
+            else:
+                tail_pos = snake_tp.headpos.copy()#сохраняем позицию головы в переменную 
+                snake_tail = control.getbyattr(type='snake', attr='pos', value=self.pos)#находим часть хвоста которая осталась в портале
+                snake_tail.pos = tail_pos#переносим хвост в координаты головы
+                snake_tail.drawn = False#меняем флаг для перерисовки хвоста
+            self.drawn = False#меняем флаг для перерисовки портала
     
     def destruct(self, control):
         '''
