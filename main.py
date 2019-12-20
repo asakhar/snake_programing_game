@@ -29,17 +29,18 @@ def check_mouse_events(control):
     lmb - left mouse button
     mmb - middle mouse button
     rmb - right mouse button'''
-    lmb, mmb, rmb = mouse.get_pressed()
-    if lmb or mmb or rmb:
-        pos = mouse.get_pos()
-        pos = [(pos[0]//10)*10, (pos[1]//10)*10] #find the position of the mouse
-        if not pos in control.getproperty(attr='pos'):
-            if lmb: #when you press the left mouse button a barrier is placed
-                control += Barrier('block', pos=pos)
-            if rmb: #when you press the right mouse button a self-removing barrier is placed
-                control += Barrier('block', pos=pos, countdown=5000)
-            if mmb: #when you press the middle mouse button the turtle appears
-                control += Turtle(pos=pos)
+    if control.run:
+        lmb, mmb, rmb = mouse.get_pressed()
+        if lmb or mmb or rmb:
+            pos = mouse.get_pos()
+            pos = [(pos[0]//10)*10, (pos[1]//10)*10] #find the position of the mouse
+            if not pos in control.getproperty(attr='pos'):
+                if lmb: #when you press the left mouse button a barrier is placed
+                    control += Barrier('block', pos=pos)
+                if rmb: #when you press the right mouse button a self-removing barrier is placed
+                    control += Barrier('block', pos=pos, countdown=5000)
+                if mmb: #when you press the middle mouse button the turtle appears
+                    control += Turtle(pos=pos)
    
 if __name__=='__main__':
     '''
