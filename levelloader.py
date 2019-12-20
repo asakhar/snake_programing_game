@@ -25,8 +25,8 @@ def create_image(i, j):
 Create an image with dimensions i, j.
 Создать изобрадение с размерами i,j.
     """
-  image = Image.new("RGB", (i, j), "white")
-  return image
+    image = Image.new("RGB", (i, j), "white")
+    return image
 
 def set_pixel(img, i, j, c): 
     """
