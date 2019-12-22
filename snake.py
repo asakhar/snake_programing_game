@@ -35,6 +35,21 @@ class Snake(Object):
                 script: script of behavior
                 pos: position
                 size: size of the object
+                clock: object to help track time
+                clock.tick: time used in the previous tick
+                headpos: position of the snakes head
+                normal_speed: normal value of speed
+                speed: current value of speed
+                delayer: cycle delay
+                health: value of the snake 'health'
+                tail: list for objects in tail of snake
+                direction: direstion of the object
+                script: keeps an object that defines the behavior of snake
+                deaths: counter for snake 'deaths'
+                cycles: number of played cycles
+                cycletime: time of the cycle
+                delay: value of the delay
+                slowdown_timer: counter of the time in case of slowdown
     '''
     def __init__(self, image, pn, script, pos=[30, 10], size=None, stdir=STAY, 
                  deaths=0):
