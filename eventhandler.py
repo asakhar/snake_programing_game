@@ -2,8 +2,8 @@
 """
 Created on Sun Dec 22 16:35:45 2019
 
-@author:
-    import pygame
+@author: lookmnv
+import pygame
 import sys
 import PySimpleGUI as sg
 from importlib import import_module
