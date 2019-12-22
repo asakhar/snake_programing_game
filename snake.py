@@ -94,7 +94,6 @@ class Snake(Object):
         '''
         Function that returns information about the direction of the snake head
         obj takes an object on the scene at x,y coordinates
-        it can be none therefore, a check is started
         '''
         x = self.headpos[0]
         y = self.headpos[1]
