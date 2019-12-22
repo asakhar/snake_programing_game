@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Nov 22 17:19:06 2019
+Created on Sun Dec 22 16:35:45 2019
 
-@author: Lookmnv
-"""
-import pygame
+@author:
+    import pygame
 import sys
 import PySimpleGUI as sg
 from importlib import import_module
@@ -13,7 +12,7 @@ from snake import Snake, errorAlert
 from dataclasses import dataclass
 
 class EventHandler:
-    
+    '''A simple event handling class, which manages callbacks to be executed.'''
     def file_dialog(self, *text):
         layout = [[sg.InputText(text[0], key='input', enable_events=True)], 
                    [sg.Ok()]]
@@ -26,12 +25,12 @@ class EventHandler:
                 return values['input']
         
     def __init__(self):
-        ''' '''
+        '''Constructor'''
         self.flag_pause=True
         self.flag_restart=False
     
     class Behavior:     
-        '''Класс, описывающий поведения змейки, управляемой с клавиатуры'''
+        '''A simple class, which describes the behavior of the snake, that moves by a keyboard.'''
         def __init__(self, controllers):
             self.controllers = controllers
         
@@ -46,6 +45,8 @@ class EventHandler:
             return kwargs.direction
         
     def toggle_pause(self, control, set=None):
+        '''A function, which pauses the game
+        set- set True or False'''
         if set == None:
             control.pause = not control.pause
         else:
@@ -55,8 +56,9 @@ class EventHandler:
                 if control.pause else 'Snake')
     
     def __call__(self, control):
-        '''Функция обработчика событий
-        control - сцена'''
+        '''A function of event handler.
+        This function describes events, which happends with the snake, when we press certain buttons.
+        control - scene.'''
         for event in control.events:
             if event.type==QUIT:
                 control.run = False
@@ -113,4 +115,3 @@ class EventHandler:
                     self.toggle_pause(control)
                 if event.key==K_ESCAPE:
                     control.run = False
-                
